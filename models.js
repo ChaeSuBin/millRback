@@ -50,7 +50,7 @@ export const tempUser = sequelize.define(
     },
     pass: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
     vcode: {
       type: DataTypes.STRING,

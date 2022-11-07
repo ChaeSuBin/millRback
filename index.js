@@ -7,7 +7,7 @@ import {
   Players
 } from "./models.js";
 import { setChainId } from "./units/setChainId.js";
-import { loginProc, regiCompletePage, sendMailRegi, sendMailReset } from "./units/loginRegi.js";
+import { loginProc, regiCompletePage, resetPassword, sendMailRegi, sendMailReset } from "./units/loginRegi.js";
 import { fileUpload, fileMerge, fileIdxUpload } from "./units/fileUploader.js";
 import { 
   findOpenedItems,
@@ -48,10 +48,6 @@ app.get("/openeditems", async(req, res) => {
 app.get("/openedtokns", async(req, res) => {
   const item = await findOpenedTokns();
   return res.json(item);
-});
-app.get("/resetpass/:userid", async(req, res) => {
-  const result = await sendMailReset(req.params.userid);
-  return res.json(result);
 });
 app.get("/getuserid/:chainaddr", (req, res) => {
   addrToId(req.params.chainaddr).then(userId => {
@@ -124,6 +120,14 @@ app.post("/createtempuser", async(req, res) => {
   const result = sendMailRegi(req.body.playerId, req.body.playerPass);
   res.json(result);
 })
+app.post("/sendmailreset", async(req, res) => {
+  const result = await sendMailReset(req.body.playerId);
+  res.json(result);
+})
+app.post("/resetpass", async(req, res) => {
+  const result = await resetPassword(req.body.playerId, req.body.playerPass, req.body.vCode);
+  res.json(result);
+});
 app.post("/fileupload", async(req, res) => {
   const result = fileUpload(req.body);
   res.json(result);
