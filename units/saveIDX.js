@@ -1,26 +1,44 @@
 import { sequelize, TokenIdx, Items } from "../models.js";
 
-export const mintToknIdx = (body) => {
+export const itemClose = (_itemId) => {
 	return new Promise(resolve => {
-		sequelize.query('select * from toknidxes').then(([idxItems, row]) => {
-			TokenIdx.create({
-				id: row.rowCount + 1,
-				toknid : row.rowCount,
-				hash: body.hash,
-				owner: body.userId,
-				price: 0,
-				open: false
-			})
-	  	})
-		resolve(true);
+		Items.update(
+			{ open: false },
+			{ where: {itemid: _itemId}}
+		).then(()=> {
+			resolve(true);
+		})
+	})
+}
+export const mintToknIdx = (body) => {
+	console.log(body);
+	return new Promise(resolve => {
+		TokenIdx.create({
+			toknid : body.toknId,
+			hash: body.hash,
+			owner: body.userId,
+			price: 0,
+			open: false
+		}).then(() => {
+			resolve(true);
+		})
+	})
+}
+export const idToItem = (_rowId) => {
+	return new Promise(resolve => {
+		Items.findOne({
+			where: {id: _rowId}})
+			.then(item => {
+				resolve(item);
+		})
 	})
 }
 export const hashToItem = (_fileHash) => {
 	return new Promise(resolve => {
 		Items.findOne({
-			where: {hash: _fileHash}})
-			.then(item => {
-				resolve(item);
+			where: {hash: _fileHash}
+		}).then(item => {
+			resolve(item);
 		})
 	})
 }

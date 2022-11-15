@@ -63,6 +63,10 @@ export const tempUser = sequelize.define(
 export const Items = sequelize.define(
   "items",
   {
+    itemid: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
     title: {
       type: DataTypes.STRING,
       allowNull: false,

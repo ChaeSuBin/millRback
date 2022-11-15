@@ -7,18 +7,19 @@ import {
   Players
 } from "./models.js";
 import { setChainId } from "./units/setChainId.js";
-import { loginProc, regiCompletePage, resetPassword, sendMailRegi, sendMailReset } from "./units/loginRegi.js";
+import { checkExistId, loginProc, regiCompletePage, resetPassword, sendMailRegi, sendMailReset } from "./units/loginRegi.js";
 import { fileUpload, fileMerge, fileIdxUpload } from "./units/fileUploader.js";
 import { 
   findOpenedItems,
   buyToknChange, 
   findOpenedTokns, 
-  hashToItem, 
+  idToItem, 
   mintToknIdx, 
   toknIdToHash, 
-  setToknSaleStart} from "./units/saveIDX.js";
+  setToknSaleStart,
+  itemClose,
+  hashToItem} from "./units/saveIDX.js";
 import { addrToId, getItemsId, nameToAddr, ownedItemList, ownedItemHashList } from './units/userInfo.js';
-import { itemOpenBatch } from "./units/toknStt.js";
 
 const app = express();
 app.use(cors());
@@ -53,6 +54,10 @@ app.get("/getuserid/:chainaddr", (req, res) => {
   addrToId(req.params.chainaddr).then(userId => {
     return res.json(userId); })
 });
+app.get("/getmatchuserid/:userid", (req, res) => {
+  checkExistId(req.params.userid).then(result => {
+    return res.json(result); })
+});
 app.get("/chainacc/:userid", async(req, res) => {
   const addr = await nameToAddr(req.params.userid);
   return res.json(addr);
@@ -65,12 +70,16 @@ app.get("/getownedtokn/:userid", async(req, res) => {
   const items = await ownedItemHashList(req.params.userid);
   return res.json(items);
 });
+app.get("/getitemtitle/:fileHash", async(req, res) => {
+  const item = await hashToItem(req.params.fileHash);
+  return res.json(item);
+})
 app.get("/getidlist/:userid/:itemhash", async(req, res) => {
   const idList = await getItemsId(req.params.userid, req.params.itemhash);
   return res.json(idList);
 })
-app.get("/iteminfo/:filehash", async(req, res) => {
-  const item = await hashToItem(req.params.filehash);
+app.get("/iteminfo/:rowid", async(req, res) => {
+  const item = await idToItem(req.params.rowid);
   return res.json(item);
 });
 app.get("/toknhash/:toknid", async(req, res) => {
@@ -100,12 +109,12 @@ app.put("/usercheckin", async(req, res) => {
   const result = await loginProc(req.body);
   res.json(result);
 })
-app.put("/settoknsale", async(req, res) => {
-  const result = await setToknSaleStart(req.body.toknId, req.body.price, req.body.state);
+app.put("/setitemclose", async(req, res) => {
+  const result = await itemClose(req.body.itemID);
   res.json(result);
 })
-app.put("/opentokn", async(req, res) => {
-  const result = await itemOpenBatch(req.body.toknId, req.body.price);
+app.put("/settoknsale", async(req, res) => {
+  const result = await setToknSaleStart(req.body.toknId, req.body.price, req.body.state);
   res.json(result);
 })
 app.put("/setchainid", async(req, res) => {

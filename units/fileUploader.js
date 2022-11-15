@@ -54,16 +54,18 @@ export const fileMerge = (_fileName, _fileHash) => {
 }
 export const fileIdxUpload = (body) => {
   return new Promise(resolve => {
-    sequelize.query('select id from items').then(([itemsid, row]) => {
-      Items.create({
-        id: row.rowCount+1,
-        title: body.title,
-        description: body.desc,
-        hash: body.hash,
-        owner: body.userId,
-        open: true
-      })
+    Items.create({
+      itemid: body.itemId,
+      title: body.title,
+      description: body.desc,
+      hash: body.hash,
+      owner: body.userId,
+      open: true
+    }).then(() => {
       resolve(true);
+    }).catch(err => {
+      console.log(err);
+      console.log(31999);
     })
   })
 }

@@ -18,6 +18,18 @@ export const loginProc = async(body) => {
         })
     })
 }
+export const checkExistId = async(_userId) => {
+    return new Promise(resolve => {
+        Players.findOne({
+            where: {name: _userId}
+        }).then(user => {
+            if(user === null)
+                resolve(false);
+            else
+                resolve(true);
+        })
+    })
+}
 export const resetPassword = async(_account, _pass, _vcode) => {
     const player = await tempUser.findOne({ where: { email: _account} });
     console.log(player.vcode, _vcode);
@@ -48,7 +60,7 @@ export const sendMailReset = async(_account) => {
         secure: true, // true for 465, false for other ports
         auth: { // account info of sender address
             user: 'co-ra@naver.com',
-            pass: '',
+            pass: 'newcv@ruf-02',
         },
     });
     const emailOptions = { // set sending option
@@ -82,7 +94,7 @@ export const sendMailRegi = (_userId, _userPass) => {
         secure: true, // true for 465, false for other ports
         auth: { // account info of sender address
             user: 'co-ra@naver.com',
-            pass: '',
+            pass: 'newcv@ruf-02',
         },
     });
     const emailOptions = { // set sending option
