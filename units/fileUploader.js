@@ -1,6 +1,5 @@
 import filestream from "fs";
 import path from "path";
-import { sequelize, Items } from "../models.js";
 
 const __dirname = '/home/giparang/threadweb/fortune/server/archive';
 // file path
@@ -52,23 +51,7 @@ export const fileMerge = (_fileName, _fileHash) => {
     return err.message;
   } 
 }
-export const fileIdxUpload = (body) => {
-  return new Promise(resolve => {
-    Items.create({
-      itemid: body.itemId,
-      title: body.title,
-      description: body.desc,
-      hash: body.hash,
-      owner: body.userId,
-      open: true
-    }).then(() => {
-      resolve(true);
-    }).catch(err => {
-      console.log(err);
-      console.log(31999);
-    })
-  })
-}
+
 export const mkdirtemp = (_fileHash) => {
   const FILES_DIR = `${STATIC_FILES}/${_fileHash}`;
   if(!filestream.existsSync(FILES_DIR)){

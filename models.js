@@ -65,7 +65,7 @@ export const Items = sequelize.define(
   {
     itemid: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: true,
     },
     title: {
       type: DataTypes.STRING,
@@ -99,6 +99,10 @@ export const TokenIdx = sequelize.define(
       allowNull: false,
     },
     toknid: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    itemid: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },

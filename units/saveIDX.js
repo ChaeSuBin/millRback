@@ -10,20 +10,6 @@ export const itemClose = (_itemId) => {
 		})
 	})
 }
-export const mintToknIdx = (body) => {
-	console.log(body);
-	return new Promise(resolve => {
-		TokenIdx.create({
-			toknid : body.toknId,
-			hash: body.hash,
-			owner: body.userId,
-			price: 0,
-			open: false
-		}).then(() => {
-			resolve(true);
-		})
-	})
-}
 export const idToItem = (_rowId) => {
 	return new Promise(resolve => {
 		Items.findOne({
@@ -33,12 +19,16 @@ export const idToItem = (_rowId) => {
 		})
 	})
 }
-export const hashToItem = (_fileHash) => {
+export const toknIdToItem = (_toknId) => {
 	return new Promise(resolve => {
-		Items.findOne({
-			where: {hash: _fileHash}
-		}).then(item => {
-			resolve(item);
+		TokenIdx.findOne({
+			where: { toknid: _toknId}
+		}).then(toknIdx => {
+			Items.findOne({
+				where: {itemid: toknIdx.itemid}
+			}).then(item => {
+				resolve(item);
+			})
 		})
 	})
 }
@@ -89,16 +79,6 @@ export const setToknSaleStart = (_toknId, _price, _state) => {
 			open: _state, price: _price},
 			{where: {toknid: _toknId}}).then(result => {
 				resolve(true);
-		})
-	})
-}
-export const buyToknChange = (tokenId, buyerId) => {
-	console.log('k: ', tokenId, buyerId);
-	return new Promise(resolve => {
-		TokenIdx.update({
-			open: false, owner: buyerId},
-			{where: {toknid: tokenId}}).then(result => {
-				resolve(true)
 		})
 	})
 }

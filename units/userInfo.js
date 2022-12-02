@@ -1,4 +1,4 @@
-import { sequelize, Players, Items } from "../models.js";
+import { sequelize, Players, Items, TokenIdx } from "../models.js";
 
 export const addrToId = (_addr) => {
     return new Promise(resolve => {
@@ -37,30 +37,27 @@ export const ownedItemList = (_userId) => {
     })
 }
 export const ownedItemHashList = (_userId) => {
+    let itemIdList = [];
     //sequelize.query(`select * from (select distinct on (hash) toknid, hash from toknidxes where owner=${_userId}) p order by toknid`)
     return new Promise(resolve => {
-        sequelize.query(`select distinct on (hash) toknid, hash from toknidxes where owner=${_userId}`)
-        .then(([items, count]) => {
-            getItems(items, count.rowCount-1).then(result => {
-                resolve([result, items]);
-            }).catch(err => {
-                console.log('!CATCH: UNDEFINED ERR AT rows[count].hash');
+        TokenIdx.findAll({ where: { owner: _userId }}).then(mintedRow => {
+            let count = mintedRow.length;
+            while(count){
+                itemIdList.push(mintedRow[count-1].itemid);
+                --count;
+            }
+            getItems(itemIdList).then(items => {
+                resolve([items, mintedRow]);
             })
         })
     })
 }
-const getItems = (rows, count) => {
+const getItems = (_itemIdList) => {
     return new Promise((resolve, reject) => {
-        let hashList = [];
-        do{
-            hashList.push(rows[count].hash);
-            --count;
-        }while(count >= 0)
-        Items.findAll({ 
-            where: { hash: hashList},
-            order: [['id', 'DESC']]
-        }).then(result => {
-            resolve(result);
+        Items.findAll({
+            where: {itemid: _itemIdList}
+        }).then(items => {
+            resolve(items);
         })
     })
 }

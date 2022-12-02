@@ -2,23 +2,18 @@ import express from "express";
 import filestream from "fs";
 import https from 'https';
 import cors from "cors";
-import { 
-  Items,
-  Players
-} from "./models.js";
 import { setChainId } from "./units/setChainId.js";
-import { checkExistId, loginProc, regiCompletePage, resetPassword, sendMailRegi, sendMailReset } from "./units/loginRegi.js";
-import { fileUpload, fileMerge, fileIdxUpload } from "./units/fileUploader.js";
+import { checkExistId, loginProc, matchCheck, regiComplete, sendMailRegi } from "./units/loginRegi.js";
+import { fileUpload, fileMerge } from "./units/fileUploader.js";
+import { fileIdxUpload, mintedToknId, mintToknIdx, buyToknChange } from "./units/observer.js";
 import { 
   findOpenedItems,
-  buyToknChange, 
   findOpenedTokns, 
-  idToItem, 
-  mintToknIdx, 
+  idToItem,
   toknIdToHash, 
   setToknSaleStart,
   itemClose,
-  hashToItem} from "./units/saveIDX.js";
+  toknIdToItem} from "./units/saveIDX.js";
 import { addrToId, getItemsId, nameToAddr, ownedItemList, ownedItemHashList } from './units/userInfo.js';
 
 const app = express();
@@ -50,6 +45,10 @@ app.get("/openedtokns", async(req, res) => {
   const item = await findOpenedTokns();
   return res.json(item);
 });
+app.get("/getmatchvcode/:userid/:vcode", (req, res) => {
+  matchCheck(req.params.userid, req.params.vcode).then(result => {
+    return res.json(result);})
+})
 app.get("/getuserid/:chainaddr", (req, res) => {
   addrToId(req.params.chainaddr).then(userId => {
     return res.json(userId); })
@@ -70,8 +69,8 @@ app.get("/getownedtokn/:userid", async(req, res) => {
   const items = await ownedItemHashList(req.params.userid);
   return res.json(items);
 });
-app.get("/getitemtitle/:fileHash", async(req, res) => {
-  const item = await hashToItem(req.params.fileHash);
+app.get("/getitemtitle/:toknid", async(req, res) => {
+  const item = await toknIdToItem(req.params.toknid);
   return res.json(item);
 })
 app.get("/getidlist/:userid/:itemhash", async(req, res) => {
@@ -82,6 +81,10 @@ app.get("/iteminfo/:rowid", async(req, res) => {
   const item = await idToItem(req.params.rowid);
   return res.json(item);
 });
+app.get("/toknid/:fromaddr", async(req, res) => {
+  const toknId = await mintedToknId(req.params.fromaddr);
+  return res.json(toknId);
+})
 app.get("/toknhash/:toknid", async(req, res) => {
   const filehash = await toknIdToHash(req.params.toknid);
   return res.json(filehash);
@@ -101,9 +104,18 @@ app.get("/dirsync/:dirname", async(req, res) => {
     console.log(err)
   }
 })
-app.get("/regiplayer/:vcode", async(req, res) => {
-  const result = await regiCompletePage(req.params.vcode);
-  res.end(result);
+app.get("/getimagestock/:dirname/:filename", async(req, res) => {
+  filestream.readFile(`./archive/static/files/${req.params.dirname}/${req.params.filename}`, (err, data) => {
+    res.type('jpeg');
+    res.send(data);
+  })
+})
+app.get("/getaudiostock/:dirname/:filename", async(req, res) => {
+  filestream.readFile(`./archive/static/files/312710ec11393e9458af70f5737e76da29e29a230017602f13fe7d8e5441a4ba/mountain-path-125573.mp3`, (err, data) => {
+    res.writeHead(200, {
+      'Content-Type': 'audio/mpeg' });
+    res.end(data);
+  })
 })
 app.put("/usercheckin", async(req, res) => {
   const result = await loginProc(req.body);
@@ -122,21 +134,17 @@ app.put("/setchainid", async(req, res) => {
   res.json(result);
 })
 app.put("/buytoknchange", async(req, res) => {
-  const result = await buyToknChange(req.body.toknId, req.body.userId);
+  const result = await buyToknChange(req.body.userId, req.body.fromAddr);
+  res.json(result);
+})
+app.post("/regiplayer", async(req, res) => {
+  const result = await regiComplete(req.body.userId, req.body.pass, req.body.addr);
   res.json(result);
 })
 app.post("/createtempuser", async(req, res) => {
-  const result = sendMailRegi(req.body.playerId, req.body.playerPass);
+  const result = sendMailRegi(req.body.playerId);
   res.json(result);
 })
-app.post("/sendmailreset", async(req, res) => {
-  const result = await sendMailReset(req.body.playerId);
-  res.json(result);
-})
-app.post("/resetpass", async(req, res) => {
-  const result = await resetPassword(req.body.playerId, req.body.playerPass, req.body.vCode);
-  res.json(result);
-});
 app.post("/fileupload", async(req, res) => {
   const result = fileUpload(req.body);
   res.json(result);
