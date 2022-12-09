@@ -4,7 +4,7 @@ import {
 //await sequelize.sync({ force: true }); //all table initilizing
 //   TokenIdx.sync({force: true});
 //   await Items.sync({alter: true});
-//   tempUser.sync({force: true});
+    await tempUser.sync({force: true});
 // await Players.sync({alter: true});
 //await Teams.sync({alter: true});
 

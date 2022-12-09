@@ -21,13 +21,16 @@ export const mintToknIdx = async(body) => {
 	return new Promise(resolve => {
 		TokenIdx.create({
 			toknid : body.toknId,
-      itemid: body.itemId,
+      		itemid: body.itemId,
 			hash: body.hash,
 			owner: body.userId,
 			price: 0,
 			open: false
 		}).then(() => {
 			resolve(true);
+		}).catch(() => {
+			console.log('endpoint connect failed');
+			resolve(false);
 		})
 	})
 }

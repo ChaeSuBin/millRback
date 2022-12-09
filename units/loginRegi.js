@@ -39,11 +39,27 @@ export const matchCheck = async(_userId, _vcode) => {
                 else
                     resolve(false);
             }
+        ).catch(err => {
+            console.log(err);
+            resolve(false);
+        })
+    })
+}
+const tempUserCheck = (_userId) => {
+    return new Promise(resolve => {
+        tempUser.findOne({ where: { email: _userId}}).then(
+            tempuser => {
+                if(tempuser !== null){
+                    tempuser.destroy();
+                }
+                resolve(true);
+            }
         )
     })
 }
 // nodemailer Transport 생성
-export const sendMailRegi = (_userId) => {
+export const sendMailRegi = async(_userId) => {
+    await tempUserCheck(_userId);
     const token = crypto.randomBytes(20).toString('hex');
     const transporter = nodemailer.createTransport({
         host: 'smtp.naver.com',
