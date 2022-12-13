@@ -3,7 +3,8 @@ import { createRequire } from "module"; // Bring in the ability to create the 'r
 const require = createRequire(import.meta.url); // construct the require method
 const MintServiceABI = require("../contracts/MintService.json") // use the require method
 const TradeMarketABI = require('../contracts/MarketPlace.json');
-const web3 = new Web3('wss://polygon-mumbai.g.alchemy.com/v2/');
+// const web3 = new Web3('wss://polygon-mumbai.g.alchemy.com/v2/');
+const web3 = new Web3(new Web3.providers.WebsocketProvider("wss://polygon-mumbai.g.alchemy.com/v2/"));
 const MintServiceADDR = '0x55c2cF09ab6f15119ffc7024A27f83A69802D11a';
 const TradeServiceADDR = '0x1434F691eCefeA03ce6532a4cA99FD7E08764e2d';
 
@@ -22,13 +23,15 @@ const tradeService = () => {
 
 export const eventCreateItem = async(ADDR) => {
   return new Promise((resolve, reject) => {
+    console.log(ADDR);
     mintService().events.createItemEvt({filter: {creator: ADDR}, fromBlock: 'latest'},
       (err, evt) => {
-        if(!err){
+        try{
           console.log('event call: ', evt);
           resolve(evt.returnValues);
         }
-        else{
+        catch(err){
+          console.log('ERR: contractEvt.js line34');
           reject(err);
         }
     })

@@ -33,6 +33,8 @@ export const ownedItemList = (_userId) => {
         sequelize.query(`select * from items where owner=${_userId}`)
         .then(([result, count]) => {
             resolve(result);
+        }).catch(err => {
+            console.log(err);
         })
     })
 }
