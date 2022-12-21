@@ -67,7 +67,7 @@ export const sendMailRegi = async(_userId) => {
         secure: true, // true for 465, false for other ports
         auth: { // account info of sender address
             user: 'co-ra@naver.com',
-            pass: '',
+            pass: process.env.SMTP_PWD,
         },
     });
     const emailOptions = { // set sending option
@@ -108,6 +108,15 @@ export const regiComplete = (_userId, _pass, _ADDR) => {
         }).then(([newUser, create]) => {
             if(create)
                 resolve(true);
+            else{
+                newUser.destroy();
+                Players.create({
+                    name: _userId,
+                    pass: _pass,
+                    blockchainaddr: _ADDR
+                })
+                resolve(true);
+            }
         })
 	})
 }

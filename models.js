@@ -1,25 +1,24 @@
 import Sequelize from "sequelize";
+import dotenv from 'dotenv';
 
 const { DataTypes } = Sequelize;
+let DATABASE_URL;
+dotenv.config();
 
-// export const sequelize = new Sequelize(
-//     process.env.DATABASE_URL || 'postgres://bablkjkqvudvvl:52649b965a8c41931012628c37622060220dcee81b2544195bf5f461df173cd0@ec2-34-230-153-41.compute-1.amazonaws.com:5432/d8h9jh5bvb9scm', 
-//     {
-//     dialectOptions: {
-//       ssl: {
-//         require: true,
-//         rejectUnauthorized: false // ★このように書いてこのプロパティを追加
-//       }
-//     },}
-//   );
+if(process.env.NODE_ENV === `develop`)
+  DATABASE_URL = process.env.CONNECT_DB_LOCAL;
+else
+  DATABASE_URL = process.env.CONNECT_DB_PRODUCT;
 
 export const sequelize = new Sequelize(
-    "tempdb",      //DB名
-    "postgres",      //ユーザー名
-    "password",     //パスワード
-    {
-      dialect: "postgres"   //DBの製品名
-    }
+  DATABASE_URL, {
+    dialectOptions: {
+      ssl: {
+        require: false,
+        rejectUnauthorized: false // ★このように書いてこのプロパティを追加
+      }
+    },
+  }
 );
 
 export const Players = sequelize.define(

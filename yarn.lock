@@ -299,6 +299,11 @@
   resolved "https://registry.yarnpkg.com/@types/validator/-/validator-13.7.6.tgz#631f1acd15cbac9cb0a114da7e87575f1c95b46a"
   integrity sha512-uBsnWETsUagQ0n6G2wcXNIufpTNJir0zqzG4p62fhnwzs48d/iuOWEEo0d3iUxN7D+9R/8CSvWGKS+KmaD0mWA==
 
+"@vendia/serverless-express@^4.10.1":
+  version "4.10.1"
+  resolved "https://registry.yarnpkg.com/@vendia/serverless-express/-/serverless-express-4.10.1.tgz#6489cd179734f1cd690b93a90ae2e83ae8adc639"
+  integrity sha512-8FM/GnQ8bbp1fynAWLGzNIy3Hyhoevixwh2Aj8qBPpw7rkbWZ1I7RC2XhZZaTZo/1JTDlff4cDDmkgY0CzUV7g==
+
 abortcontroller-polyfill@^1.7.3:
   version "1.7.5"
   resolved "https://registry.yarnpkg.com/abortcontroller-polyfill/-/abortcontroller-polyfill-1.7.5.tgz#6738495f4e901fbb57b6c0611d0c75f76c485bed"
@@ -888,6 +893,11 @@ dom-walk@^0.1.0:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/dom-walk/-/dom-walk-0.1.2.tgz#0c548bef048f4d1f2a97249002236060daa3fd84"
   integrity sha512-6QvTW9mrGeIegrFXdtQi9pk7O/nSK6lSdXW2eqUspN5LWD7UTji2Fqw5V2YLjBpHEoU9Xl/eUWNpDeZvoyOv2w==
+
+dotenv@^16.0.3:
+  version "16.0.3"
+  resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-16.0.3.tgz#115aec42bac5053db3c456db30cc243a5a836a07"
+  integrity sha512-7GO6HghkA5fYG9TYnNxi14/7K9f5occMlp3zXAuSxn7CKCxt9xbNWG7yF8hTCSUchlfWSe3uLmlPfigevRItzQ==
 
 dottie@^2.0.2:
   version "2.0.2"

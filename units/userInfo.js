@@ -34,6 +34,7 @@ export const ownedItemList = (_userId) => {
         .then(([result, count]) => {
             resolve(result);
         }).catch(err => {
+            console.log(444001);
             console.log(err);
         })
     })
@@ -51,6 +52,9 @@ export const ownedItemHashList = (_userId) => {
             getItems(itemIdList).then(items => {
                 resolve([items, mintedRow]);
             })
+        }).catch(err => {
+            console.log(444002);
+            console.log(err);
         })
     })
 }
@@ -60,14 +64,19 @@ const getItems = (_itemIdList) => {
             where: {itemid: _itemIdList}
         }).then(items => {
             resolve(items);
+        }).catch(err => {
+            console.log(580000, err);
         })
     })
 }
 export const getItemsId = (_userId, _itemHash) => {
+    console.log('555999');
     return new Promise(resolve => {
         sequelize.query(`select toknid from toknidxes where owner=${_userId} and hash='${_itemHash}'`)
         .then(([items, count]) => {
             resolve(items);
+        }).catch(err => {
+            console.log(666666, err);
         })
     })
 }
