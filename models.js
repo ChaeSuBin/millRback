@@ -85,6 +85,10 @@ export const Items = sequelize.define(
     open: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
+    },
+    tempdonate: {
+      type: DataTypes.STRING,
+      allowNull: true,
     }
   },
   { underscored: true },

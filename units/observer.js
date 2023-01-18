@@ -43,7 +43,8 @@ export const fileIdxUpload = async(body) => {
         description: body.desc,
         hash: body.hash,
         owner: body.userId,
-        open: true
+        open: true,
+		tempdonate: body.tempdonate
       }).then(() => {
         resolve(true);
       }).catch(err => {

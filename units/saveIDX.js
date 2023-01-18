@@ -41,13 +41,19 @@ export const toknIdToHash = (_toknId) => {
 		})
 	})
 }
-export const findOpenedItems = () => {
+export const findOpenedItems = (_page) => {
 	return new Promise(resolve => {
-		Items.findAll({
-			where: {open: true}
-		}).then(items => {
-			resolve(items);
-		})
+		const perPage = 5;
+
+		Items.findAndCountAll({
+			where: {open: true},	
+			offset: (_page - 1) * perPage,
+			limit: perPage
+		}).then(result => {
+		const count = result.count; // 全データの件数
+		const rows = result.rows;   // 条件をみたすデータ
+		resolve([rows, count]);
+		});
 	})
 }
 export const findOpenedTokns = () => {
@@ -79,6 +85,15 @@ export const setToknSaleStart = (_toknId, _price, _state) => {
 			open: _state, price: _price},
 			{where: {toknid: _toknId}}).then(result => {
 				resolve(true);
+		})
+	})
+}
+export const getDonateList = () => {
+	return new Promise(resolve => {
+		sequelize.query('select tempdonate from items where tempdonate is not null')
+		.then(([orgNames]) => {
+			console.log(orgNames);
+			resolve(orgNames);
 		})
 	})
 }

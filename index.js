@@ -15,7 +15,8 @@ import {
   toknIdToHash, 
   setToknSaleStart,
   itemClose,
-  toknIdToItem} from "./units/saveIDX.js";
+  toknIdToItem,
+  getDonateList} from "./units/saveIDX.js";
 import { addrToId, getItemsId, nameToAddr, ownedItemList, ownedItemHashList } from './units/userInfo.js';
 
 dotenv.config();
@@ -43,9 +44,14 @@ if (process.env.NODE_ENV === `develop`){
 app.get("/", function (req, res) {
   res.send("(╯°ㅁ°)╯︵┻━┻");
 });
-app.get("/openeditems", async(req, res) => {
+app.get('/donatelist', async(req, res) => {
+  console.log(1000022);
+  const result = await getDonateList();
+  return res.json(result);
+})
+app.get("/openeditems/:page", async(req, res) => {
   console.log(100000)
-  const item = await findOpenedItems();
+  const item = await findOpenedItems(req.params.page);
   return res.json(item);
 });
 app.get("/openedtokns", async(req, res) => {
