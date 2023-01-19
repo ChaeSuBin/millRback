@@ -49,9 +49,14 @@ app.get('/donatelist', async(req, res) => {
   const result = await getDonateList();
   return res.json(result);
 })
-app.get("/openeditems/:page", async(req, res) => {
+app.get("/openeditemsnew/:page", async(req, res) => {
   console.log(100000)
-  const item = await findOpenedItems(req.params.page);
+  const item = await findOpenedItemsnew(req.params.page);
+  return res.json(item);
+});
+app.get("/openeditems", async(req, res) => {
+  console.log(100000)
+  const item = await findOpenedItems();
   return res.json(item);
 });
 app.get("/openedtokns", async(req, res) => {

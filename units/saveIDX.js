@@ -41,7 +41,16 @@ export const toknIdToHash = (_toknId) => {
 		})
 	})
 }
-export const findOpenedItems = (_page) => {
+export const findOpenedItems = () => {
+	return new Promise(resolve => {
+		Items.findAll({
+			where: {open: true}
+		}).then(items => {
+			resolve(items);
+		})
+	})
+}
+export const findOpenedItemsnew = (_page) => {
 	return new Promise(resolve => {
 		const perPage = 5;
 
